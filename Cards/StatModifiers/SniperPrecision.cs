@@ -10,13 +10,16 @@ using UnityEngine;
 
 namespace NolansCards.Cards
 {
-    class SnipeAway : CustomCard
+    class SniperPrecision : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
             //Edits values on card itself, which are then applied to the player in `ApplyCardStats`
-            gun.reloadTimeAdd = 5;
-            gun.projectileSpeed = 3f;
+            gun.ammo = -1;
+            gun.damage = 4;
+            gun.projectileSpeed = 4f;
+            gun.recoilMuiltiplier = 3f;
+            gun.reloadTimeAdd = 4;
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
@@ -33,13 +36,15 @@ namespace NolansCards.Cards
                 Destroy(mono);
             }
         }
+
+
         protected override string GetTitle()
         {
-            return "SnipeAway";
+            return "SinperPrecision";
         }
         protected override string GetDescription()
         {
-            return "Your bullets become fast, but good luck reloading";
+            return "You're a sniper now";
         }
         protected override GameObject GetCardArt()
         {
@@ -53,13 +58,47 @@ namespace NolansCards.Cards
         {
             return new CardInfoStat[]
             {
+
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "5x Bullet Velocity",
-                    amount = "No",
+                    stat = " Damage",
+                    amount = "+4",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+
+                new CardInfoStat()
+                {
+                    positive = true,
+                    stat = " ProjectileSpeed",
+                    amount = "4x",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+
+                new CardInfoStat()
+                {
+                    positive = true,
+                    stat = " ReloadTime",
+                    amount = "+4s",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = " Ammo",
+                    amount = "-1",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = " Recoil",
+                    amount = "3x",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
+
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()

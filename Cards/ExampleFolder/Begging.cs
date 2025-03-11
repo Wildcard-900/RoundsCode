@@ -1,6 +1,5 @@
 ﻿using ModdingUtils.Extensions;
 using ModdingUtils.GameModes;
-using ModsPlus;
 using NolansCards.Monos;
 using System;
 using System.Collections;
@@ -11,7 +10,7 @@ using UnityEngine;
 
 namespace NolansCards.Cards
 {
-    class Medusa : CustomCard
+    class Begging : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
@@ -20,12 +19,12 @@ namespace NolansCards.Cards
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             //Edits values on player when card is selected
-            player.gameObject.AddComponent<MedusaMono>();
+            player.gameObject.AddComponent<TemplateMono>();
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             //Run when the card is removed from the player
-            var mono = player.GetComponent<MedusaMono>();
+            var mono = player.GetComponent<TemplateMono>();
 
             if (mono)
             {
@@ -36,11 +35,11 @@ namespace NolansCards.Cards
 
         protected override string GetTitle()
         {
-            return "Medusa";
+            return "CardName";
         }
         protected override string GetDescription()
         {
-            return "Don't look at me";
+            return "Card Description";
         }
         protected override GameObject GetCardArt()
         {
@@ -76,8 +75,11 @@ namespace NolansCards.Cards
 
 namespace NolansCards.Monos
 {
-    class MedusaMono : MonoBehaviour, IGameStartHookHandler, IGameEndHookHandler, IRoundStartHookHandler, IRoundEndHookHandler, IPointStartHookHandler, IPointEndHookHandler
+    class BeggingMono : MonoBehaviour, IGameStartHookHandler, IGameEndHookHandler, IRoundStartHookHandler, IRoundEndHookHandler, IPointStartHookHandler, IPointEndHookHandler
     {
+        private System.Random rand = new System.Random();
+
+        
         private Player player;
         private Block block;
         private Gun gun;
@@ -85,8 +87,6 @@ namespace NolansCards.Monos
         private float lastTickTime = 0f;
         private const float timeoutThreshold = 2.5f;
         private Coroutine coroutine;
-        private float notyouxpos;
-        private float playerxpos;
 
         void Start()
         {
@@ -126,7 +126,8 @@ namespace NolansCards.Monos
         }
         void OnShoot(GameObject obj)
         {
-
+            int randNum = rand.Next(-2, 2);
+            gun.gravity = randNum;
         }
         void OnBlock(BlockTrigger.BlockTriggerType type)
         {
@@ -166,29 +167,7 @@ namespace NolansCards.Monos
 
         public void OnPointStart()
         {
-            foreach (var notyou in PlayerManager.instance.players)
-            {
-                notyouxpos = notyou.transform.position.x;
-                playerxpos = player.transform.position.x;
-                if (notyou != player)
-                {
-                    if ((notyou.data.playerActions.Left.IsPressed) & (notyouxpos < playerxpos))
-                    {
-                        //freeze notyou
-                    }
-                    else if ((notyou.data.playerActions.Right.IsPressed) & (notyouxpos > playerxpos))
-                    {
-                        //freeze notyou
-                    }
-                    else
-                    {
-                        //unfreese notyou
-                    }
-
-
-                }
-            }
-
+            throw new NotImplementedException();
         }
 
         public void OnPointEnd()

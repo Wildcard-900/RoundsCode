@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace NolansCards.Cards
 {
-    class LittleMinion : CustomCard
+    class Despiration : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
@@ -19,12 +19,12 @@ namespace NolansCards.Cards
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             //Edits values on player when card is selected
-            player.gameObject.AddComponent<testMono>();
+            player.gameObject.AddComponent<TemplateMono>();
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             //Run when the card is removed from the player
-            var mono = player.GetComponent<testMono>();
+            var mono = player.GetComponent<TemplateMono>();
 
             if (mono)
             {
@@ -35,7 +35,7 @@ namespace NolansCards.Cards
 
         protected override string GetTitle()
         {
-            return "testCard";
+            return "CardName";
         }
         protected override string GetDescription()
         {
@@ -75,11 +75,13 @@ namespace NolansCards.Cards
 
 namespace NolansCards.Monos
 {
-    class testMono : MonoBehaviour, IGameStartHookHandler, IRoundStartHookHandler, IRoundEndHookHandler
+    class Despiration : MonoBehaviour, IGameStartHookHandler, IGameEndHookHandler, IRoundStartHookHandler, IRoundEndHookHandler, IPointStartHookHandler, IPointEndHookHandler
     {
         private Player player;
         private Block block;
         private Gun gun;
+
+        private int pointsPlayed = 0;
 
         private float lastTickTime = 0f;
         private const float timeoutThreshold = 2.5f;
@@ -154,6 +156,23 @@ namespace NolansCards.Monos
         public void OnGameStart()
         {
             UnityEngine.GameObject.Destroy(this);
+        }
+
+        public void OnPointStart()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnPointEnd()
+        {
+            pointsPlayed++;
+            gun.damage += 1000f;
+        }
+
+        public void OnGameEnd()
+        {
+            gun.damage -= (1000f * pointsPlayed);
+            pointsPlayed = 0;
         }
     }
 }
